@@ -90,12 +90,22 @@ def save_data(request):
     price = data['total_price']
     clothes = data['total_clothes']
     services = data['total_service']
-    new_record = Order.objects.create(details=clothes, order_Id=order_id, total_price=price, service=services)
-    new_record.save()
-    print(new_record)
+    paid = data['pay']
+    payment = str(paid)
+
+    if payment == 'True':
+      new_record = Order.objects.create(details=clothes, order_Id=order_id, total_price=price, service=services, paid=True)
+      new_record.save()
+    else:
+      new_record = Order.objects.create(details=clothes, order_Id=order_id, total_price=price, service=services)
+      new_record.save()
+
+    
     return JsonResponse({'success': True})
   else:
     return JsonResponse({'error': 'Invalid request method'})
 
 
-
+def dashboard2(request):
+  orders = Order.objects.all()
+  return render(request, 'dashboard2.html', {'orders':orders})

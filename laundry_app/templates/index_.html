@@ -89,7 +89,7 @@
         <div class="sidebar-links">
           <ul>
             <li>
-              <a href="Dashboard.html" title="Dashboard">
+              <a href="/dashboard" title="Dashboard">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -186,7 +186,7 @@
               onchange="updateTotalPrice()"
               disabled
             />
-            <label for="{{ service.service_name}}">{{ service.service_name }}</label></br>
+            <label for="{{ service.service_name}}">{{ service.service_name }} {{ service.price }}</label></br>
             {% endfor %}
           </div>
 
@@ -269,6 +269,8 @@
       const receipt = document.getElementById('previewNumberValue');
       const clothes = document.getElementById('clothes_only');
       const service = document.getElementById('service_only');
+      const paid = document.getElementById('paidCheckbox');
+
       const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
@@ -279,6 +281,9 @@
           const t_price = total.textContent;
           const t_clothes = clothes.textContent;
           const t_service = service.textContent;
+          
+          const isChecked = paidCheckbox.checked;
+
           
 
           // Send data to Django view using AJAX
@@ -294,6 +299,8 @@
               total_price: t_price,
               total_clothes: t_clothes,
               total_service: t_service,
+              
+              pay: isChecked,
           
               
             })

@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('settings', views.settings, name='settings'),
     path('dashboard', views.dashboard, name='dashboard'),
+    path('dashboard2', views.dashboard2, name='dashboard2'),
     path('index', views.index, name='index'),
 
     path('order', views.order, name='order'),

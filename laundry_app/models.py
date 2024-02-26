@@ -19,16 +19,21 @@ class Service(models.Model):
 	def __str__(self):
 		return self.service_name
 
-	
+class Action(models.Model):
+	name = models.CharField('Name', max_length=40, blank=False)
+
+	def __str__(self):
+		return self.name
 
 
 class Order(models.Model):
 	details = models.TextField('Details', blank=False)
-	order_Id = models.CharField('ID', max_length=40, blank=False)
-	
+	order_id = models.CharField('ID', max_length=40, blank=False)
 	total_price = models.IntegerField(blank=True, null=True)
 	service = models.CharField(max_length=40, blank=True, null=True)
-	date = models.DateTimeField(auto_now_add=True)
+	paid = models.BooleanField(default=False)
+	date_added = models.DateTimeField(auto_now_add=True)
+	action = models.ForeignKey(Action, blank=True, null=True, on_delete=models.SET_NULL)
 
 	
 
