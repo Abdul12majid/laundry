@@ -184,6 +184,7 @@ function addClothes() {
 // Delete Clothes Item
 function deleteClothesItem(listItem) {
   const clothesPrice = parseInt(listItem.textContent.match(/₦(\d+)/)[1]) || 0;
+  const selectedClothesList = document.getElementById("selectedClothesList")
 
   // Update the total preview price
   const totalPreviewPrice =
@@ -194,15 +195,23 @@ function deleteClothesItem(listItem) {
 
   // Remove the list item
   listItem.remove();
+  
+
+  
+
 
   // If there are no more items in the preview, hide the print button and disable the paid checkbox
-  if (document.getElementById("selectedClothesList").children.length === 0) {
+  if (selectedClothesList.children.length == 1) {
     document.getElementById("printbtn").style.display = "none";
     document.getElementById("paidCheckbox").disabled = true;
+    //console.log("deleted all")
+    
+
 
     document.getElementById("previewNumberValue").textContent = "";
   }
 }
+
 
 // Generate Receipt Content
 function generateReceiptContent() {

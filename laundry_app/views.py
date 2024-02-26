@@ -94,10 +94,10 @@ def save_data(request):
     payment = str(paid)
 
     if payment == 'True':
-      new_record = Order.objects.create(details=clothes, order_Id=order_id, total_price=price, service=services, paid=True)
+      new_record = Order.objects.create(details=clothes, order_id=order_id, total_price=price, service=services, paid=True)
       new_record.save()
     else:
-      new_record = Order.objects.create(details=clothes, order_Id=order_id, total_price=price, service=services)
+      new_record = Order.objects.create(details=clothes, order_id=order_id, total_price=price, service=services)
       new_record.save()
 
     
