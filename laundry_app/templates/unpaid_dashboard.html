@@ -236,6 +236,7 @@
                 
               </a>
             </li>
+             {% if request.user.is_superuser %}
             <li>
               <a href="/admin" title="Settings">
                 <svg
@@ -255,11 +256,12 @@
                   ></path>
                   <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
                 </svg>
-                {% if request.user.is_superuser %}
-                <span class="link hide">Admin Page</span>
-                {% endif %}
+                
+                <span class="link hide">Admin</span>
+                
               </a>
             </li>
+            {% endif %}
           </ul>
         </div>
       </nav>
