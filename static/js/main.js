@@ -63,10 +63,13 @@ function updateTotalPrice() {
 
   totalPrice *= quantity;
 
-  document.getElementById("totalPrice").value = `₦${totalPrice}`;
+document.getElementById("totalPrice").value = `₦${totalPrice}`;
 }
 
 //Add clothes to preview
+const detailItem = document.createElement("li");
+const detailArray = []
+
 
 function addClothes() {
   const clothesType = document.getElementById("clothesType").value;
@@ -98,31 +101,47 @@ function addClothes() {
   const servicesString =
     selectedServices.length > 0 ? ` for ${selectedServices.join(" and ")}` : "";
 
-  const justcloth = `${quantity} ${clothesType}(s)`;
-  const action = `${servicesString}`
+  const justcloth = `${quantity} ${clothesType}(s) `;
+  const details = `${quantity} ${clothesType}(s) ${servicesString}. `;
+  
   const t_price =  `${ 
     document.getElementById("totalPrice").value 
   }`;
 
-  const newClothes = `${quantity} ${clothesType}(s)${servicesString} -  ${
+  const newClothes = ` ${quantity} ${clothesType}(s) ${servicesString} - ${
     document.getElementById("totalPrice").value
-  }`;
+  }**`;
 
   const listItem = document.createElement("li");
-
+  
   const clothItem = document.createElement("i");
-  const actionItem = document.createElement("b");
+  
+  
   const priceItem = document.createElement("b");
+  let id = Math.floor(Math.random() * 10000)
+
+  detailArray.push({details, id})
+  console.log(detailArray)
+
+let value = ""
+  
+detailArray.map((arr) => (
+  value += arr.details
+  ))
+
+
+
+
+detailItem.textContent = value
 
   
-
-  listItem.textContent = newClothes;
+    listItem.textContent = newClothes;
   clothItem.textContent = justcloth;
-  actionItem.textContent = action;
+  
   priceItem.textContent = t_price;
 
 
-  const c = `${clothItem} ${actionItem} ${priceItem}`
+  
 
 
 
@@ -138,10 +157,14 @@ function addClothes() {
 
   const selectedClothesList = document.getElementById("selectedClothesList");
   const clothes = document.getElementById("clothes_only");
-  const service = document.getElementById("service_only");
+  
+  const info = document.getElementById("details_only");
 
-  clothes.appendChild(clothItem)
-  service.appendChild(actionItem)
+  
+
+  info.appendChild(detailItem);
+  clothes.appendChild(clothItem);
+  
   selectedClothesList.appendChild(listItem);
 
   if (!document.getElementById("previewNumberValue").textContent) {
@@ -181,6 +204,9 @@ function addClothes() {
   document.getElementById("addClothbtn").disabled = true;
 }
 
+
+
+
 // Delete Clothes Item
 function deleteClothesItem(listItem) {
   const clothesPrice = parseInt(listItem.textContent.match(/₦(\d+)/)[1]) || 0;
@@ -195,19 +221,31 @@ function deleteClothesItem(listItem) {
 
   // Remove the list item
   listItem.remove();
+
+
+
+const showValue = () => {
+  let exactId = ""
+   detailArray.map((arr) => (
+   console
+ ))
   
 
-  
+   // let value =  detailArray.filter((arr) => arr.id != exactId)
+   // console.log(value)
+     
+     
+}
+     showValue()
 
+  
+  
 
   // If there are no more items in the preview, hide the print button and disable the paid checkbox
-  if (selectedClothesList.children.length == 1) {
+  if (selectedClothesList.children.length == 0) {
     document.getElementById("printbtn").style.display = "none";
     document.getElementById("paidCheckbox").disabled = true;
     //console.log("deleted all")
-    
-
-
     document.getElementById("previewNumberValue").textContent = "";
   }
 }

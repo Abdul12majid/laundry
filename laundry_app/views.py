@@ -1,16 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import ClotheType, Pre_order, Service, Order
+from .models import ClotheType, Pre_order, Service, Order, Action
 from django.views.decorators.csrf import csrf_protect
 import json
 from django.http import JsonResponse
+from django.db.models import Sum
+from bs4 import BeautifulSoup
+from django.contrib import messages
 
 
 # Create your views here.
-def home(request):
-	if request.method == 'POST':
-		name = request.POST['data']
-		return redirect('/admin')
-	return render(request, 'index.html', )
 
 
 def settings(request):
@@ -23,37 +21,7 @@ def dashboard(request):
 def index(request):
   services = Service.objects.all()
   clothes = ClotheType.objects.all()
-  return render(request, 'index_.html', {'services':services, 'clothes':clothes})
-
-
-def dynamic_data(request):
-  if request.method == 'GET':
-    service_id = request.GET.get('service_id')
-    x = int(service_id)
-    print(x)
-    try:
-      service = Service.objects.get(pk=x)
-     # if service.id == 1:
-      #  dynamic_field_value = 100
-      #elif service.id == 2:
-       # dynamic_field_value = 200
-      #elif service.id == 3:
-       # dynamic_field_value = 300
-      #else:
-      dynamic_field_value = 4  # Set a default value for other cases
-      print(dynamic_field_value)
-
-      # Determine how to dynamically generate the input field value/attributes
-      # Replace with your logic (e.g., calculate value based on service data)
-      
-      # ... (Optionally, set other attributes for the input field)
-      return JsonResponse({'value': dynamic_field_value})
-    except service.DoesNotExist:
-      return JsonResponse({'error': 'Invalid service ID'}, status=404)
-  else:
-    return HttpResponseBadRequest('Invalid request method')
-
-
+  return render(request, 'index.html', {'services':services, 'clothes':clothes})
 
 
 def order(request):
@@ -64,40 +32,47 @@ def order(request):
 	return render(request, 'receipt.html', {})
 
 
-@csrf_protect
-def processOrder(request):
-	transaction_id = datetime.datetime.now().timestamp()
-	data = json.loads(request.body)
-	if request.user.is_authenticated:
-		total = float(data['form']['total'])
-		x = Action.objects.create(action_name=total)
-		x.save()
-		messages.success('request', ('helooo'))
-	else:
-		print('User is not logged in')
-	return JsonResponse('Payment complete', safe=False)
-
 
 l = []
 
+import codecs
+
 @csrf_protect
 def save_data(request):
-  
   if request.method == 'POST':
-    data = json.loads(request.body)
+    data = json.loads(request.body.decode('utf-8'))
+
     content = data['content']
     order_id = data['xxx']
     price = data['total_price']
     clothes = data['total_clothes']
-    services = data['total_service']
+    services = "gggg"
     paid = data['pay']
     payment = str(paid)
 
+    soup = BeautifulSoup(content, 'html.parser')
+    clean_text = soup.get_text(separator='\n')
+    cleaned_text_1 = clean_text.replace('Delete', '')  # Using string replace
+    
+    
+    #encoded_content = clean_text.encode('utf-8')  # Assuming UTF-8 encoding
+    x = cleaned_text_1.encode('ascii', 'ignore').decode()
+
     if payment == 'True':
-      new_record = Order.objects.create(details=clothes, order_id=order_id, total_price=price, service=services, paid=True)
+      new_record = Order.objects.create(
+        details=x, 
+        order_id=order_id, 
+        total_price=price, 
+        paid=True,
+
+        )
       new_record.save()
     else:
-      new_record = Order.objects.create(details=clothes, order_id=order_id, total_price=price, service=services)
+      new_record = Order.objects.create(
+        details=x, 
+        order_id=order_id, 
+        total_price=price, 
+        )
       new_record.save()
 
     
@@ -106,6 +81,86 @@ def save_data(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
-def dashboard2(request):
-  orders = Order.objects.all()
-  return render(request, 'dashboard2.html', {'orders':orders})
+
+def get_total_price():
+  total_price = Order.objects.aggregate(total_price=Sum('total_price'))['total_price']
+  return total_price
+
+def all_dashboard(request):
+    # 1. All orders
+    all_orders = Order.objects.all()
+    t_count = Order.objects.count()
+    total_price = get_total_price()
+
+
+    context = {
+        'all_orders': all_orders,
+        
+        't_count': t_count,
+        
+        'total_price': total_price,
+    }
+
+    return render(request, 'all_order.html', context)
+
+
+def paid_dashboard(request):
+    # 1. All orders
+    
+    
+    total_price = Order.objects.filter(paid=True).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
+
+    # 2. All paid orders
+    all_orders = Order.objects.filter(paid=True)
+    t_count = all_orders.count()
+
+    # 3. All unpaid orders (paid=False)
+    
+
+    context = {
+        'all_orders': all_orders,
+        
+        't_count': t_count,
+        
+        'total_price': total_price,
+    }
+
+    return render(request, 'paid_dashboard.html', context)
+
+
+def unpaid_dashboard(request):
+    # 1. All orders
+    all_orders = Order.objects.filter(paid=False)
+    t_count = all_orders.count()
+    total_price = Order.objects.filter(paid=False).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
+
+
+
+    context = {
+        'all_orders': all_orders,
+
+        't_count': t_count,
+
+        'total_price': total_price,
+    }
+
+    return render(request, 'unpaid_dashboard.html', context)
+
+
+def see_order(request, pk):
+  order = Order.objects.get(id=pk)
+  actions = Action.objects.all()
+  if request.method == "POST":
+    payment_status = request.POST['payment']
+    order_status = request.POST['order_status']  # Use the new name
+    order.paid = payment_status
+    order.action = Action.objects.get(id=order_status)  # Use the actual ID
+    order.save()
+    messages.success(request, ('Order updated'))
+  return render(request, 'view_order.html', {'order': order, 'actions': actions})
+
+
+def update_order(request, pk):
+  get_order = Order.objects.get(id=pk)
+  actions  = Action.objects.all()
+  return render(request, 'settings.html')
