@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import ClotheType, Pre_order, Service, Order, Action
+from .models import ClotheType, Service, Order, Action
 from django.views.decorators.csrf import csrf_protect
 import json
 from django.http import JsonResponse

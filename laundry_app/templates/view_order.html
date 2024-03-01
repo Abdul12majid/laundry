@@ -196,7 +196,7 @@
         <div class="sidebar-links">
           <ul>
             <li>
-              <a href="#" title="Dashboard">
+              <a href="/" title="Dashboard">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -214,7 +214,7 @@
                   <path d="M14 12h6v8h-6z"></path>
                   <path d="M14 4h6v4h-6z"></path>
                 </svg>
-                <span class="link hide">Dashboard</span>
+                <span class="link hide">Order</span>
               </a>
             </li>
             <!-- <li>
@@ -244,7 +244,7 @@
           <div class="divider"></div>
           <ul>
             <li>
-              <a href="Settings.html" title="Settings">
+              <a href="/admin" title="Settings">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -262,7 +262,9 @@
                   ></path>
                   <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
                 </svg>
-                <span class="link hide">Settings</span>
+                {% if request.user.is_superuser %}
+                <span class="link hide">Admin</span>
+                {% endif %}
               </a>
             </li>
           </ul>

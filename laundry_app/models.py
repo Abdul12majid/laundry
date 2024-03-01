@@ -37,6 +37,4 @@ class Order(models.Model):
 
 	
 
-class Pre_order(models.Model):
-	name =models.ManyToManyField(ClotheType, blank=True)
 	
