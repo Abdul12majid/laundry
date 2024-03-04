@@ -88,6 +88,7 @@ def get_total_price():
 
 def all_dashboard(request):
     # 1. All orders
+    services = Service.objects.all()
     all_orders = Order.objects.all()
     t_count = Order.objects.count()
     total_price = get_total_price()
@@ -95,6 +96,7 @@ def all_dashboard(request):
 
     context = {
         'all_orders': all_orders,
+        'services': services,
         
         't_count': t_count,
         
@@ -107,7 +109,7 @@ def all_dashboard(request):
 def paid_dashboard(request):
     # 1. All orders
     
-    
+    services = Service.objects.all()
     total_price = Order.objects.filter(paid=True).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
 
     # 2. All paid orders
@@ -119,6 +121,7 @@ def paid_dashboard(request):
 
     context = {
         'all_orders': all_orders,
+        'services': services,
         
         't_count': t_count,
         
@@ -130,6 +133,7 @@ def paid_dashboard(request):
 
 def unpaid_dashboard(request):
     # 1. All orders
+    services = Service.objects.all()
     all_orders = Order.objects.filter(paid=False)
     t_count = all_orders.count()
     total_price = Order.objects.filter(paid=False).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
@@ -138,6 +142,7 @@ def unpaid_dashboard(request):
 
     context = {
         'all_orders': all_orders,
+        'services': services,
 
         't_count': t_count,
 
@@ -164,3 +169,15 @@ def update_order(request, pk):
   get_order = Order.objects.get(id=pk)
   actions  = Action.objects.all()
   return render(request, 'settings.html')
+
+
+
+def delete_order(request, pk):
+  get_order = Order.objects.get(id=pk)
+  if request.user.is_superuser:
+    get_order.delete()
+    messages.success(request, ("Order deleted"))
+    return redirect(request.META.get("HTTP_REFERER"))
+  else:
+    messages.success(request, ("Error deleting order"))
+    return redirect(request.META.get("HTTP_REFERER"))

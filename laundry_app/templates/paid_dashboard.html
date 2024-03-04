@@ -79,7 +79,24 @@
         <div><a class="btn btn-outline-primary" href="/all_order" data-filter-option="paid">All</a></div>
         <div><a class="btn btn-outline-primary" href="/paid_order" data-filter-option="paid">Paid</a></div>
         <div><a class="btn btn-outline-primary" href="/unpaid_order" data-filter-option="paid">Unpaid</a></div>
+      </div></br>
+
+      <center>
+        <div class="col-md-6">
+      <div class="container">
+      {% if messages %}
+      {% for message in messages %}
+
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         
+        </div>
+        {% endfor %}
+        {% endif %}
       </div>
+    </div>
+  </center>
       <div class="Receipts-table">
         <div class="receiptN">
           <h2>
@@ -130,11 +147,27 @@
             <td>{{ order.total_price }}</td>
             <td>{{ order.paid }}</td>
             <td>{{ order.date_added|date:"m/d/Y" }}</td>
-            <td><a href="" class="btn btn-outline-primary btn-sm">update</a>{% if request.user.is_superuser %}&nbsp;&nbsp;<a href="" class="btn btn-outline-danger btn-sm">delete</a>{% endif %}</td>
+            <td><a href="{% url 'view-order' order.id %}" class="btn btn-outline-primary btn-sm">update</a>{% if request.user.is_superuser %}&nbsp;&nbsp;<a href="{% url 'delete-order' order.id %}" class="btn btn-outline-danger btn-sm">delete</a>{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>  <!-- 0449541712 GTbank -->
-</table>
+</table></br></br></br>
+
+           <!-- services -->
+           <center>
+          <div class="container" style="color:white;">
+            {% for service in services %}
+            <input
+              type="checkbox"
+              id="{{ service.service_name }}"
+              value="{{ service.price }}"
+              onchange="updateTotalPrice()"
+              disabled
+            />
+            <label for="{{ service.service_name}}">{{ service.service_name }} {{ service.price }}</label></br>
+            {% endfor %}
+          </div>
+          </center>
 
      
     </div>

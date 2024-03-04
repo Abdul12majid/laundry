@@ -13,8 +13,10 @@ urlpatterns = [
 
     path('all_order', views.all_dashboard, name='all-orders'),
     path('paid_order', views.paid_dashboard, name='paid-orders'),    
-    path('unpaid_order', views.unpaid_dashboard, name='unpaid-orders'),    
-    path('view_order/<int:pk>', views.see_order, name='view-order'),    
+    path('unpaid_order', views.unpaid_dashboard, name='unpaid-orders'),
+
+    path('view_order/<int:pk>', views.see_order, name='view-order'),
+    path('delete_order/<int:pk>', views.delete_order, name='delete-order'),
 
 
     
