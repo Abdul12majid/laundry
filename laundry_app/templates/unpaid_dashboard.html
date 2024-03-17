@@ -78,7 +78,7 @@
       <div class="filter">
         <div><a class="btn btn-outline-primary" href="/all_order" data-filter-option="paid">All</a></div>
         <div><a class="btn btn-outline-primary" href="/paid_order" data-filter-option="paid">Paid</a></div>
-        <div><a class="btn btn-outline-primary" href="/unpaid_order" data-filter-option="paid">Unpaid</a></div>
+        <div><a class="btn btn-outline-primary active" href="/unpaid_order" data-filter-option="paid">Unpaid</a></div>
       </div></br>
 
       <center>
@@ -156,7 +156,7 @@
 
            <!-- services -->
            <center>
-          <div class="container" style="color:white;">
+          <div class="container" style="color:white; visibility: hidden;">
             {% for service in services %}
             <input
               type="checkbox"
