@@ -69,106 +69,7 @@
     
     
     <!-- Header Ends Here -->
-    
-    <!-- Receipt Filter -->
-    <div class="filter_container">
-      <div class="filter">
-        <div><a class="btn btn-outline-primary active" href="/all_order" data-filter-option="paid">All</a></div>
-        <div><a class="btn btn-outline-primary" href="/paid_order" data-filter-option="paid">Paid</a></div>
-        <div><a class="btn btn-outline-primary" href="/unpaid_order" data-filter-option="paid">Unpaid</a></div>
-      </div></br>
 
-      <center>
-        <div class="col-md-6">
-      <div class="container">
-      {% if messages %}
-      {% for message in messages %}
-
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-         
-        </div>
-        {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-  </center>
-
-      <div class="Receipts-table">
-        <div class="receiptN">
-          <h2>
-            Receipts
-          </h2>
-        </div>
-        
-        <div class="receiptsDb">
-          <div class="summary">
-            <div>
-              <h3>
-                Receipt Numbers's Table <span id="date">2024-02-01</span>
-              </h3>
-              <p>Table shows list of <span id="totalReceipt">{{ t_count }}</span> receipt numbers</p>
-    
-             
-            </div>
-            <div>
-              <h3>Total Price</h3>
-              <p><span id="total_price">{{ total_price }}</span></p>
-            </div>
-          </div>
-
-
-      <input placeholder="filter by date" type="text" id="date-filter" readonly> <button id="filter-button">Filter</button>
-
-
-          <!-- Tables -->
-          
-
-
-<table class="receipts-table" id="dtBasicExample">
-    <thead>
-        <tr>
-          <th>S/N</th>
-            <th>Order ID</th>
-            <th>Price</th>
-            <th>Paid</th>
-            <th>Date</th>
-            <th>Action</th>
-            </tr>
-    </thead>
-    <tbody>
-        {% for order in all_orders %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ order.order_id }}</td>
-            <td>{{ order.total_price }}</td>
-            <td>{{ order.paid }}</td>
-            <td>{{ order.date_added|date:"m/d/Y" }}</td>
-            <td><a href="{% url 'view-order' order.id %}" class="btn btn-outline-primary btn-sm">view</a>&nbsp;{% if request.user.is_superuser %}&nbsp;&nbsp;<a href="{% url 'delete-order' order.id %}" class="btn btn-danger btn-sm">delete</a>{% endif %}</td>
-            </tr>
-        {% endfor %}
-    </tbody>  <!-- 0449541712 GTbank -->
-</table></br></br></br>
-
-           <!-- services -->
-           <center>
-          <div class="container" style="color:white; visibility: hidden;">
-            {% for service in services %}
-            <input
-              type="checkbox"
-              id="{{ service.service_name }}"
-              value="{{ service.price }}"
-              onchange="updateTotalPrice()"
-              disabled
-            />
-            <label for="{{ service.service_name}}">{{ service.service_name }} {{ service.price }}</label></br>
-            {% endfor %}
-          </div>
-          </center>
-
-     
-    </div>
       <!-- sidenav starts Here -->
       <nav>
         <div class="sidebar-top">
@@ -298,6 +199,107 @@
         </div>
       </nav>
       <!-- Sidenar Ends Here -->
+    
+    <!-- Receipt Filter -->
+    <div class="filter_container">
+      <div class="filter">
+        <div style="background-color: #311432;"><a style="color:white;" class="btn btn-outline-primary" href="/all_order" data-filter-option="paid">All</a></div>
+        <div><a class="btn btn-outline-primary" href="/paid_order" data-filter-option="paid">Paid</a></div>
+        <div><a class="btn btn-outline-primary" href="/unpaid_order" data-filter-option="paid">Unpaid</a></div>
+      </div></br>
+
+      <center>
+        <div class="col-md-6">
+      <div class="container">
+      {% if messages %}
+      {% for message in messages %}
+
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+         
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </center>
+
+      <div class="Receipts-table">
+        <div class="receiptN">
+          <h2>
+            Receipts
+          </h2>
+        </div>
+        
+        <div class="receiptsDb">
+          <div class="summary">
+            <div>
+              <h3>
+                Receipt Numbers's Table <span id="date">2024-02-01</span>
+              </h3>
+              <p>Table shows list of <span id="totalReceipt">{{ t_count }}</span> receipt numbers</p>
+    
+             
+            </div>
+            <div>
+              <h3>Total Price</h3>
+              <p><span id="total_price">{{ total_price }}</span></p>
+            </div>
+          </div>
+
+
+      <input placeholder="filter by date" type="text" id="date-filter" readonly> <button id="filter-button">Filter</button>
+
+
+          <!-- Tables -->
+          
+
+
+<table class="receipts-table" id="dtBasicExample">
+    <thead>
+        <tr>
+          <th>S/N</th>
+            <th>Order ID</th>
+            <th>Price</th>
+            <th>Paid</th>
+            <th>Date</th>
+            <th>Action</th>
+            </tr>
+    </thead>
+    <tbody>
+        {% for order in all_orders %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.paid }}</td>
+            <td>{{ order.date_added|date:"m/d/Y" }}</td>
+            <td><a href="{% url 'view-order' order.id %}" class="btn btn-outline-primary btn-sm">view</a>&nbsp;{% if request.user.is_superuser %}&nbsp;&nbsp;<a href="{% url 'delete-order' order.id %}" class="btn btn-danger btn-sm">delete</a>{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>  <!-- 0449541712 GTbank -->
+</table></br></br></br>
+
+           <!-- services -->
+           <center>
+          <div class="container" style="color:white; visibility: hidden;">
+            {% for service in services %}
+            <input
+              type="checkbox"
+              id="{{ service.service_name }}"
+              value="{{ service.price }}"
+              onchange="updateTotalPrice()"
+              disabled
+            />
+            <label for="{{ service.service_name}}">{{ service.service_name }} {{ service.price }}</label></br>
+            {% endfor %}
+          </div>
+          </center>
+
+     
+    </div>
+    
       
       <!-- snackbar -->
       <div id="empty-field-alert"></div>
