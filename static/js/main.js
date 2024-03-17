@@ -110,7 +110,7 @@ function addClothes() {
 
   const newClothes = ` ${quantity} ${clothesType}(s) ${servicesString} - ${
     document.getElementById("totalPrice").value
-  }**`;
+  }. `;
 
   const listItem = document.createElement("li");
   

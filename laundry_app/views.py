@@ -89,7 +89,7 @@ def get_total_price():
 def all_dashboard(request):
     # 1. All orders
     services = Service.objects.all()
-    all_orders = Order.objects.all()
+    all_orders = Order.objects.all().order_by('-date_added')
     t_count = Order.objects.count()
     total_price = get_total_price()
 
@@ -113,7 +113,7 @@ def paid_dashboard(request):
     total_price = Order.objects.filter(paid=True).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
 
     # 2. All paid orders
-    all_orders = Order.objects.filter(paid=True)
+    all_orders = Order.objects.filter(paid=True).order_by('-date_added')
     t_count = all_orders.count()
 
     # 3. All unpaid orders (paid=False)
@@ -134,7 +134,7 @@ def paid_dashboard(request):
 def unpaid_dashboard(request):
     # 1. All orders
     services = Service.objects.all()
-    all_orders = Order.objects.filter(paid=False)
+    all_orders = Order.objects.filter(paid=False).order_by('-date_added')
     t_count = all_orders.count()
     total_price = Order.objects.filter(paid=False).aggregate(total_paid=Sum('total_price'))['total_paid'] or 0
 
